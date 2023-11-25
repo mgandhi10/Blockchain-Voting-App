@@ -11,7 +11,7 @@ contract theVotingContract {
     }
 
     struct Poll {
-        uint id;
+        string id;
         string description;
         mapping(uint => Candidate) candidates;
         uint candidatesCount;
@@ -20,25 +20,36 @@ contract theVotingContract {
         address creator;
     }
 
-    mapping(uint => Poll) public polls;
-    uint public pollsCount;
+    mapping(string => Poll) public polls;
+    uint256 private nonce = 0; // Counter to ensure different values
 
-    event PollCreated(uint indexed pollId);
-    event CandidateAdded(uint indexed pollId, uint indexed candidateId);
-    event Voted(uint indexed pollId, uint indexed candidateId);
+    event PollCreated(string pollId);
+    event CandidateAdded(string indexed pollId, uint indexed candidateId);
+    event Voted(string indexed pollId, uint indexed candidateId);
 
-    function createPoll(string memory _description) public returns (uint) {
-        pollsCount++;
-        Poll storage newPoll = polls[pollsCount];
-        newPoll.id = pollsCount;
+    function createPoll(string memory _description) public returns (string memory) {
+        bytes32 randomHash = keccak256(abi.encodePacked(block.timestamp, msg.sender, nonce));
+        nonce++;
+        string memory randomId = toHexString(randomHash);
+
+        // Ensure unique ID
+        while(bytes(polls[randomId].description).length != 0) {
+            randomHash = keccak256(abi.encodePacked(block.timestamp, msg.sender, nonce));
+            nonce++;
+            randomId = toHexString(randomHash);
+        }
+
+        Poll storage newPoll = polls[randomId];
+        newPoll.id = randomId;
         newPoll.description = _description;
         newPoll.creator = msg.sender;
-        newPoll.admins[msg.sender] = true; // Creator is an admin of the poll
-        emit PollCreated(pollsCount);
-        return pollsCount;
+        newPoll.admins[msg.sender] = true;
+        emit PollCreated(randomId);
+
+        return randomId;
     }
 
-    function addCandidate(uint _pollId, string memory _name) public {
+    function addCandidate(string memory _pollId, string memory _name) public {
         require(polls[_pollId].admins[msg.sender], "Only admins can add candidates");
         Poll storage poll = polls[_pollId];
         poll.candidatesCount++;
@@ -46,28 +57,39 @@ contract theVotingContract {
         emit CandidateAdded(_pollId, poll.candidatesCount);
     }
 
-    function assignAdmin(uint _pollId, address _admin) public {
+    function assignAdmin(string memory _pollId, address _admin) public {
         require(polls[_pollId].creator == msg.sender, "Only the poll creator can assign admins");
         polls[_pollId].admins[_admin] = true;
     }
 
-    function vote(uint _pollId, uint _candidateId) public {
-        require(_pollId > 0 && _pollId <= pollsCount, "Invalid poll ID");
+    function vote(string memory _pollId, uint _candidateId) public {
+        require(bytes(polls[_pollId].description).length != 0, "Invalid poll ID");
         require(_candidateId > 0 && _candidateId <= polls[_pollId].candidatesCount, "Invalid candidate ID");
         require(!polls[_pollId].hasVoted[msg.sender], "Voter has already voted in this poll");
         
         Poll storage poll = polls[_pollId];
         poll.candidates[_candidateId].voteCount++;
-        poll.hasVoted[msg.sender] = true; // Record that this voter has voted
-
+        poll.hasVoted[msg.sender] = true;
         emit Voted(_pollId, _candidateId);
     }
 
-    function getPollCandidates(uint _pollId) public view returns (Candidate[] memory) {
+    function getPollCandidates(string memory _pollId) public view returns (Candidate[] memory) {
         Candidate[] memory candidatesArray = new Candidate[](polls[_pollId].candidatesCount);
         for (uint i = 1; i <= polls[_pollId].candidatesCount; i++) {
             candidatesArray[i - 1] = polls[_pollId].candidates[i];
         }
         return candidatesArray;
+    }
+
+    function toHexString(bytes32 data) internal pure returns (string memory) {
+        bytes memory alphabet = "0123456789abcdef";
+        bytes memory str = new bytes(64);
+
+        for (uint256 i = 0; i < 32; i++) {
+            str[i*2] = alphabet[uint8(data[i] >> 4)];
+            str[1+i*2] = alphabet[uint8(data[i] & 0x0f)];
+        }
+
+        return string(str);
     }
 }

@@ -2,7 +2,7 @@ import Web3 from 'web3';
 import { useEffect } from "react";
 import theVotingContractABI from './abis';
 
-const contractAddress = "0x120a43EDfFC26DdAA1F40D5507D1babF3B2cb114";
+const contractAddress = "0x0888E08ddCeebcf57752d8dd7da6aE3A90F432D5";
 
 const Wallet = ({ saveState, saveAccount, saveConnected }) => {
     useEffect(() => {
