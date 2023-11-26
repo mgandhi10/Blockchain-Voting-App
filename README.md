@@ -2,6 +2,10 @@
 
 The Blockchain Voting App is a decentralized application (dApp) that utilizes blockchain technology to facilitate secure and transparent voting processes. This repository contains both the smart contract and the frontend application necessary for the voting system.
 
+Checkout our app <a href="https://blockchain-voting-app-three.vercel.app/"> here</a>!
+
+<img width="1000" alt="homepage image" src="https://github.com/mgandhi10/Blockchain-Voting-App/blob/591c4d2d301eeeb485378ca7690465baf7d294f3/public/homepage.png">
+
 ## Table of Contents
 
 - [Prerequisites](#prerequisites)
