@@ -14,7 +14,6 @@ Checkout our app <a href="https://blockchain-voting-app-three.vercel.app/"> here
 - [Frontend Application](#frontend-application)
 - [Getting Started](#getting-started)
 - [Usage](#usage)
-- [License](#license)
 - [Contact](#contact)
 
 ## Prerequisites
@@ -88,10 +87,6 @@ To run the Blockchain Voting App locally on your machine, follow these steps:
 ## Usage
 
 Once the application is running locally, you can access it in your web browser. Follow the on-screen instructions to create polls, vote for candidates, and explore the voting system's features.
-
-## License
-
-This project is licensed under the MIT License.
 
 ## Contact
 
