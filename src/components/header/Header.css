@@ -6,21 +6,24 @@
 }
 
 #mainheader {
-    border: 5px solid black;
+    /* border: 5px solid black; */
     padding: 10px;
     margin-bottom: 100px;
-    border-radius: 50px;
-    background-color: white;
+    /* border-radius: 50px;
+    background-color: white; */
 }
 
 .connectStatus {
     font-family: 'Arial', sans-serif;
     font-size: 18px;
-    color: #333;
+    color: black;
     margin: 10px 0;
     border-radius: 5px;
+    margin-top: 500px;
+    margin-left:60px;
     border-color: black;
     border-width: 10px;
+    background-color: white;
 }
 
 /* Button Styles */

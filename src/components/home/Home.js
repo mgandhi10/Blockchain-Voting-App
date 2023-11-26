@@ -80,7 +80,6 @@ const Home = () => {
     return (
         <>
             <div className="main">
-                <h1 class="head">Etherium Based Voting Application</h1>
                 <Wallet saveState={saveState}></Wallet>
                 <Header />
                 <div className="home-buttons">
